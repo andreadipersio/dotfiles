@@ -1,0 +1,14 @@
+*.zwc
+*.zwc.old
+modules/*/cache.zsh
+.emacs.d/auto-save-list
+.vim/.netrwhist
+.emacs.d/elpa
+.emacs.d/ido.last
+.emacs.d/ac-comphist.dat
+.emacs.d/recentf
+.bash_local
+.emacs.d/bookmarks
+.emacs.d/eshell
+.emacs.d/vendor
+.emacs.d/var
