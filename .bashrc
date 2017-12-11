@@ -18,6 +18,8 @@ else
     bashcompprefix=/usr/share
 fi
 
+umask 022
+
 source $HOME/bin/git-prompt.sh
 source $HOME/.locale
 

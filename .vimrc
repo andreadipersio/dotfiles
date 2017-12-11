@@ -1,5 +1,5 @@
-set nocompatible              " be iMproved, required
-filetype off                  " required
+set nocompatible 
+filetype off
 
 "
 " Vundle
@@ -10,14 +10,16 @@ set rtp+=~/.vim/bundle/Vundle.vim
 
 call vundle#begin()
 
+Plugin 'VundleVim/Vundle.vim'
+
+Plugin 'git://github.com/tpope/vim-sensible.git'
 Plugin 'git://github.com/mileszs/ack.vim.git'
 Plugin 'git://github.com/ctrlpvim/ctrlp.vim.git'
-Plugin 'git://github.com/tpope/vim-sensible.git'
 Plugin 'git://github.com/vim-scripts/wombat256.vim'
 Plugin 'git://github.com/fatih/vim-go.git'
 
-call vundle#end()            " required
-filetype plugin indent on    " required
+call vundle#end()
+filetype plugin indent on 
 
 colorscheme wombat256mod
 
