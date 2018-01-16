@@ -3,15 +3,38 @@
 SHELL := /usr/bin/bash
 UBUNTU_FONTS := fad7939b-ubuntu-font-family-0.83.zip
 GNOME_TERMINAL_PROFILE=`dconf dump /org/gnome/terminal/legacy/profiles:/ | sed -n "s/default='\(.*\)'/\1/p"`
+INSTALL := sudo dnf install -y
 
-nvidia:
-	sudo dnf install -y akmod-nvidia \
-					    kmod-nvidia-113-300fc27 \
-					    nvidia-driver \
-					    nvidia-driver-libs \
-					    nvidia-libXNVCtrl \
-					    nvidia-settings \
-					    org-11-drv-nvidia-kmodsrc
+repos:
+	${INSTALL} https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm \
+			https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
+
+codecs:
+	${INSTALL} gstreamer-plugins-base \
+		gstreamer1-plugins-base \
+		gstreamer-plugins-bad \
+		gstreamer-plugins-ugly \ 
+		gstreamer1-plugins-ugly \
+		gstreamer-plugins-good-extras \
+		gstreamer1-plugins-good-extras \ 
+		gstreamer1-plugins-bad-freeworld \
+		ffmpeg gstreamer-ffmpeg
+
+nvidia: 
+	sudo dnf config-manager --add-repo=https://negativo17.org/repos/fedora-nvidia.repo
+	${INSTALL}  akmod-nvidia \
+		kmod-nvidia-113-300fc27 \
+		nvidia-driver \
+		nvidia-driver-libs \
+		nvidia-libXNVCtrl \
+		nvidia-settings \
+		org-11-drv-nvidia-kmodsrc
+
+/usr/bin/skypeforlinux:
+	${INSTALL} wget alsa-lib pulseaudio glibc libXv libXScrnSaver
+	wget https://go.skype.com/skypeforlinux-64.rpm && ${INSTALL} skypeforlinux-64.rpm
+
+skype: /usr/bin/skypeforlinux 
 
 ${UBUNTU_FONTS}:
 	wget https://assets.ubuntu.com/v1/${UBUNTU_FONTS}
@@ -22,12 +45,13 @@ ${HOME}/.fonts/ubuntu: ${UBUNTU_FONTS} fonts
 	fc-cache -fv
 	rm $<
 
-fonts: ${HOME}/.fonts/ubuntu
-	sudo dnf install -y google-noto-sans-fonts \
-		        	   	google-noto-serif-fonts \
-				        google-noto-sans-ui-fonts \
-				        google-noto-mono-fonts \
-				        terminus-fonts
+fonts: ${HOME}/.fonts/ubuntu repos
+	${INSTALL} google-noto-sans-fonts \
+		google-noto-serif-fonts \
+		google-noto-sans-ui-fonts \
+		google-noto-mono-fonts \
+		terminus-fonts \
+		freetype-freeworld
 
 use-ubuntu-fonts: ${HOME}/.fonts/ubuntu
 	gsettings set org.gnome.desktop.interface font-name 'Ubuntu 11'
@@ -38,9 +62,9 @@ use-ubuntu-fonts: ${HOME}/.fonts/ubuntu
 setup-fonts: fonts use-ubuntu-fonts
 
 yubikey:
-	sudo dnf install -y yubioath-desktop \
-		    		    yubikey-personalization-gui \
-				        yubikey-manager
+	${INSTALL} yubioath-desktop \
+		yubikey-personalization-gui \
+		yubikey-manager
 
 gnome-settings:
 	gsettings set org.gnome.desktop.interface gtk-key-theme "Emacs"
@@ -55,4 +79,4 @@ dump-gnome-terminal: ${HOME}/.dotfiles/gnome-terminal
 load-gnome-terminal: ${HOME}/.dotfiles/gnome-terminal
 	dconf load /org/gnome/terminal/legacy/profiles:/:${GNOME_TERMINAL_PROFILE}/ < ${HOME}/.dotfiles/gnome-terminal/adp-profile.gconf
 
-.PHONY: nvidia fonts use-ubuntu-fonts setup-fonts yubikey gnome-settings dump-gnome-terminal
+.PHONY: nvidia fonts use-ubuntu-fonts setup-fonts yubikey gnome-settings dump-gnome-terminal load-gnome-terminal repos
