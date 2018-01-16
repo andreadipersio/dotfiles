@@ -1,0 +1,58 @@
+# vim: noexpandtab filetype=make
+
+SHELL := /usr/bin/bash
+UBUNTU_FONTS := fad7939b-ubuntu-font-family-0.83.zip
+GNOME_TERMINAL_PROFILE=`dconf dump /org/gnome/terminal/legacy/profiles:/ | sed -n "s/default='\(.*\)'/\1/p"`
+
+nvidia:
+	sudo dnf install -y akmod-nvidia \
+					    kmod-nvidia-113-300fc27 \
+					    nvidia-driver \
+					    nvidia-driver-libs \
+					    nvidia-libXNVCtrl \
+					    nvidia-settings \
+					    org-11-drv-nvidia-kmodsrc
+
+${UBUNTU_FONTS}:
+	wget https://assets.ubuntu.com/v1/${UBUNTU_FONTS}
+
+${HOME}/.fonts/ubuntu: ${UBUNTU_FONTS} fonts
+	mkdir -p ${HOME}/.fonts/ubuntu
+	unzip $< -d ${HOME}/.fonts/
+	fc-cache -fv
+	rm $<
+
+fonts: ${HOME}/.fonts/ubuntu
+	sudo dnf install -y google-noto-sans-fonts \
+		        	   	google-noto-serif-fonts \
+				        google-noto-sans-ui-fonts \
+				        google-noto-mono-fonts \
+				        terminus-fonts
+
+use-ubuntu-fonts: ${HOME}/.fonts/ubuntu
+	gsettings set org.gnome.desktop.interface font-name 'Ubuntu 11'
+	gsettings set org.gnome.desktop.interface document-font-name 'Ubuntu 11'
+	gsettings set org.gnome.desktop.interface monospace-font-name 'Ubuntu Mono 13'
+	gsettings set org.gnome.desktop.wm.preferences titlebar-font 'Ubuntu Bold 11'
+
+setup-fonts: fonts use-ubuntu-fonts
+
+yubikey:
+	sudo dnf install -y yubioath-desktop \
+		    		    yubikey-personalization-gui \
+				        yubikey-manager
+
+gnome-settings:
+	gsettings set org.gnome.desktop.interface gtk-key-theme "Emacs"
+	gsettings set org.gnome.desktop.wm.preferences button-layout "appmenu:minimize,close"
+
+${HOME}/.dotfiles/gnome-terminal:
+	mkdir -p $@
+
+dump-gnome-terminal: ${HOME}/.dotfiles/gnome-terminal
+	dconf dump /org/gnome/terminal/legacy/profiles:/:${GNOME_TERMINAL_PROFILE}/ > ${HOME}/.dotfiles/gnome-terminal/adp-profile.gconf
+
+load-gnome-terminal: ${HOME}/.dotfiles/gnome-terminal
+	dconf load /org/gnome/terminal/legacy/profiles:/:${GNOME_TERMINAL_PROFILE}/ < ${HOME}/.dotfiles/gnome-terminal/adp-profile.gconf
+
+.PHONY: nvidia fonts use-ubuntu-fonts setup-fonts yubikey gnome-settings dump-gnome-terminal

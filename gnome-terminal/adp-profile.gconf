@@ -1,0 +1,9 @@
+[/]
+visible-name='ADP'
+default-size-columns=100
+default-size-rows=55
+cursor-shape='block'
+use-system-font=false
+font='Terminus 12'
+scrollbar-policy='never'
+audible-bell=false
