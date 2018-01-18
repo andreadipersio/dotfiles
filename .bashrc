@@ -37,8 +37,6 @@ function __prompt_command() {
     fi
 }
 
-alias tmux="TERM=screen-256color-bce tmux"
-
 #
 # Better History
 #
