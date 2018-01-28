@@ -23,6 +23,8 @@ filetype plugin indent on
 
 colorscheme wombat256mod
 
+runtime! plugin/sensible.vim
+
 "
 " Go 
 "
@@ -36,6 +38,13 @@ let g:go_fmt_autosave = 1
 let g:go_fmt_command = 'goimports'
 let g:go_metalinter_enabled = ['gotype']
 let g:go_metalinter_command = "--enable=gotype --enable=vet --vendor"
+
+
+"
+" Hide as much as possible
+"
+set laststatus=0
+set noruler
 
 "
 " Tab behaviour
@@ -61,7 +70,6 @@ set undodir=~/.vim/undo
 "
 " Make ctrl-p use the_silver_searcher (ag)
 "
-
 if executable('ag')
   " Use ag over grep
   set grepprg=ag\ --nogroup\ --nocolor
@@ -73,9 +81,9 @@ if executable('ag')
   let g:ctrlp_use_caching = 0
 endif
 
+" disable Background Color Erase (BCE) so that color schemes
+" render properly when inside 256-color tmux and GNU screen.
+" see also http://snk.tuxfamily.org/log/vim-256color-bce.html
 if &term =~ '256color'
-  " disable Background Color Erase (BCE) so that color schemes
-  " render properly when inside 256-color tmux and GNU screen.
-  " see also http://snk.tuxfamily.org/log/vim-256color-bce.html
   set t_ut=
 endif
