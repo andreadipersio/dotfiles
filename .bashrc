@@ -62,4 +62,11 @@ if [ -f $bashcompprefix/etc/bash_completion ]; then
     . $bashcompprefix/etc/bash_completion
 fi
 
+if [ -d $bashcompprefix/etc/bash_completion.d ]; then
+    for filename in $bashcompprefix/etc/bash_completion.d/*; do
+        . $filename
+    done
+fi
+
+
 source $HOME/.bash_local
