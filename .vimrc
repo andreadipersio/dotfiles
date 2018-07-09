@@ -17,6 +17,10 @@ Plugin 'git://github.com/mileszs/ack.vim.git'
 Plugin 'git://github.com/ctrlpvim/ctrlp.vim.git'
 Plugin 'git://github.com/vim-scripts/wombat256.vim'
 Plugin 'git://github.com/fatih/vim-go.git'
+Plugin 'elixir-editors/vim-elixir'
+Plugin 'mhinz/vim-mix-format'
+Plugin 'thinca/vim-ref'
+Plugin 'slashmili/alchemist.vim'
 
 call vundle#end()
 filetype plugin indent on 
