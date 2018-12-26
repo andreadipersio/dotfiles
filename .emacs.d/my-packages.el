@@ -3,12 +3,12 @@
 ;;
 ;; Package Archives
 ;;
-
+(add-to-list 'package-archives
+	     '("gnu" . "http://elpa.gnu.org/packages/") t)
 (add-to-list 'package-archives
 	     '("melpa" . "http://melpa.milkbox.net/packages/") t)
 (add-to-list 'package-archives
 	     '("marmalade" . "http://marmalade-repo.org/packages/") t)
-(package-initialize)
 
 ;;
 ;; Required Packages
@@ -16,10 +16,18 @@
 
 (defvar required-packages
   '(
+    let-alist
     magit
     cider
     ivy
     projectile
+    rg
+    ripgrep
+    company
+    rust-mode
+    racer
+    flycheck
+    flycheck-rust
     ) "a list of packages to ensure are installed at launch.")
 
 (require 'cl)
@@ -64,3 +72,18 @@
 
 (projectile-mode 1)
 (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
+
+;;
+;; Rust
+;;
+(add-hook 'rust-mode-hook #'racer-mode)
+(add-hook 'racer-mode-hook #'eldoc-mode)
+(add-hook 'racer-mode-hook #'company-mode)
+(add-hook 'rust-mode-hook #'flycheck-mode)
+
+(require 'rust-mode)
+(define-key rust-mode-map (kbd "TAB") #'company-indent-or-complete-common)
+(setq company-tooltip-align-annotations t)
+
+(with-eval-after-load 'rust-mode
+  (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))

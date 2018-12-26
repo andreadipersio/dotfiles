@@ -11,7 +11,7 @@
 ;;
 (setq
  backup-by-copying t
- backup-directory-alist '(("." . "~/.emacs.d/backup"))
+ backup-directory-alist '(("." . "~/.emacs.d/backup/"))
  delete-old-versions t
  kept-new-versions 5
  kept-old-versions 2
@@ -23,6 +23,7 @@
 ;;
 (add-to-list 'load-path "~/.emacs.d/themes")
 (require 'material-theme)
+(load-theme 'material t)
 
 (add-to-list 'default-frame-alist
 	     '(font . "Fira Code Medium-12"))
@@ -31,6 +32,24 @@
 	     '(width . 120))
 
 (add-to-list 'default-frame-alist
-	     '(height . 60))
+	     '(height . 65))
 
 (show-paren-mode 1)
+
+(blink-cursor-mode 0)
+
+;; Hide all minor modes
+(setq mode-line-modes
+      (mapcar (lambda (elem)
+                (pcase elem
+                  (`(:propertize (,_ minor-mode-alist . ,_) . ,_)
+                   "")
+                  (t elem)))
+              mode-line-modes))
+
+;;
+;; Aliases and Global Keybindings
+;;
+(defalias 'yes-or-no-p 'y-or-n-p)
+
+(global-set-key (kbd "S-<f1>") 'racer-describe-tooltip)
