@@ -12,3 +12,6 @@ modules/*/cache.zsh
 .emacs.d/eshell
 .emacs.d/vendor
 .emacs.d/var
+.emacs.d/backup
+.emacs.d/*.data
+.emacs.d/*.eld
