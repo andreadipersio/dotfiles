@@ -28,24 +28,29 @@
     racer
     flycheck
     flycheck-rust
+    yaml-mode
+    markdown-mode
     ) "a list of packages to ensure are installed at launch.")
 
 (require 'cl)
 
 ;; Ensure required packages are installed
 
-(defun packages-installed-p ()
-  (loop for p in required-packages
+(defun packages-installed-p (packages)
+  (loop for p in packages
 	when (not (package-installed-p p)) do (return nil)
 	finally (return t)))
 
-(unless (packages-installed-p)
-  (message "%s" "runnning package-refresh-contents...")
-  (package-refresh-contents)
-  (message "%s" " done")
-  (dolist (p required-packages)
-    (when (not (package-installed-p p))
-      (package-install p))))
+(defun install-missing-packages (packages)
+  (unless (packages-installed-p packages)
+    (message "%s" "runnning package-refresh-contents...")
+    (package-refresh-contents)
+    (message "%s" " done")
+    (dolist (p packages)
+      (when (not (package-installed-p p))
+	(package-install p)))))
+
+(install-missing-packages required-packages)
 
 ;;
 ;; Packages Configuration
