@@ -17,6 +17,8 @@
  kept-old-versions 2
  version-control t)
 
+(setq auto-save-file-name-transforms
+  `((".*" "~/.emacs.d/auto-save/" t)))
 
 ;;
 ;; Aspect
