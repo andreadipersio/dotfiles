@@ -20,6 +20,9 @@
     magit
     cider
     ivy
+    counsel
+    swiper
+    flx
     projectile
     rg
     ripgrep
@@ -59,24 +62,32 @@
 (require 'magit)
 (require 'cider)
 
-(ivy-mode 1)
-
-
-(dolist (p required-packages)
-  (when (not (package-installed-p p))
-    (package-install p)))
-
 ;;
-;; Packages Configuration
+;; ivy
 ;;
 
-(require 'magit)
-(require 'cider)
-
 (ivy-mode 1)
+
+(setq ivy-use-virtual-buffers t)
+(setq enable-recursive-minibuffers t)
+(setq ivy-count-format "(%d/%d) ")
+(setq ivy-initial-input-alist nil)
+
+;; Enable fuzzy matching
+(setq ivy-re-builders-alist
+      '((t . ivy--regex-fuzzy)))
+
+(global-set-key (kbd "M-x") 'counsel-M-x)
+(global-set-key (kbd "C-x C-f") 'counsel-find-file)
+(global-set-key "\C-s" 'swiper)
+
+;;
+;; Projectile
+;;
 
 (projectile-mode 1)
 (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
+(setq projectile-completion-system 'ivy)
 
 ;;
 ;; Rust
