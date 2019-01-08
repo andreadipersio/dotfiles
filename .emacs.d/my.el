@@ -55,3 +55,14 @@
 (defalias 'yes-or-no-p 'y-or-n-p)
 
 (global-set-key (kbd "S-<f1>") 'racer-describe-tooltip)
+
+;;
+;; Functions
+;;
+(setq sqlformat-command "sqlformat --reindent --keywords upper --identifiers lower -")
+
+(defun format-sql ()
+  "Format SQL in the current buffer"
+  (interactive)
+  (mark-whole-buffer)
+  (shell-command-on-region (point-min) (point-max) sqlformat-command (current-buffer)))
