@@ -5,6 +5,7 @@
 (when (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
 
 (setq inhibit-startup-screen t)
+(setq ring-bell-function 'ignore)
 
 ;;
 ;; Paths
