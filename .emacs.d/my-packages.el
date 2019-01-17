@@ -1,4 +1,4 @@
-(require 'package)
+ (require 'package)
 
 ;;
 ;; Package Archives
@@ -16,23 +16,41 @@
 
 (defvar required-packages
   '(
+    ;; foundamentals
     let-alist
     magit
     cider
+
+    ;; Completion
     ivy
     counsel
     swiper
     flx
+    company    
+
+    ;; project navigation
     projectile
     rg
     ripgrep
-    company
+
+    ;; syntax checking
+    flycheck    
+
+    ;; rust
     rust-mode
-    racer
-    flycheck
     flycheck-rust
+
+    ;; various modes
     yaml-mode
     markdown-mode
+
+    ;; ruby
+    enh-ruby-mode
+    chruby
+    yard-mode
+    robe
+    inf-ruby
+    ruby-electric
     ) "a list of packages to ensure are installed at launch.")
 
 (require 'cl)
@@ -132,8 +150,8 @@
   ;; function. Doing this allows RET to regain its usual
   ;; functionality when the user has not explicitly interacted with
   ;; Company.
-  (define-key company-active-map (kbd key)
-    `(menu-item nil company-complete
+  (define-key company-active-map (kbd key) 
+   `(menu-item nil company-complete
                 :filter ,(lambda (cmd)
                            (when (company-explicit-action-p)
                              cmd)))))
@@ -144,3 +162,24 @@
 ;; Company appears to override the above keymap based on company-auto-complete-chars.
 ;; Turning it off ensures we have full control.
 (setq company-auto-complete-chars nil)
+
+;;
+;; Ruby
+;;
+(with-eval-after-load 'company
+                 '(push 'company-robe company-backends))
+
+(autoload 'inf-ruby-minor-mode "inf-ruby" "Run an inferior Ruby process" t)
+
+(add-hook 'enh-ruby-mode-hook 'robe-mode)
+(add-hook 'enh-ruby-mode-hook 'yard-mode)
+(add-hook 'ehn-ruby-mode-hook 'inf-ruby-minor-mode)
+(add-hook 'ehn-ruby-mode-hook 'company-mode)
+
+(add-to-list 'auto-mode-alist '("\\.rb$" . enh-ruby-mode))
+
+(add-to-list 'auto-mode-alist
+             '("\\(?:\\.rb\\|ru\\|rake\\|thor\\|jbuilder\\|gemspec\\|podspec\\|/\\(?:Gem\\|Rake\\|Cap\\|Thor\\|Vagrant\\|Guard\\|Pod\\)file\\)\\'" . enh-ruby-mode))
+
+(chruby "2.5.3")
+
