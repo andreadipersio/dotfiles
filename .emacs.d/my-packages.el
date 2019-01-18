@@ -36,21 +36,10 @@
     ;; syntax checking
     flycheck    
 
-    ;; rust
-    rust-mode
-    flycheck-rust
-
     ;; various modes
     yaml-mode
     markdown-mode
 
-    ;; ruby
-    enh-ruby-mode
-    chruby
-    yard-mode
-    robe
-    inf-ruby
-    ruby-electric
     ) "a list of packages to ensure are installed at launch.")
 
 (require 'cl)
@@ -109,21 +98,6 @@
 (setq projectile-completion-system 'ivy)
 
 ;;
-;; Rust
-;;
-(add-hook 'rust-mode-hook #'racer-mode)
-(add-hook 'racer-mode-hook #'eldoc-mode)
-(add-hook 'racer-mode-hook #'company-mode)
-(add-hook 'rust-mode-hook #'flycheck-mode)
-
-(require 'rust-mode)
-(define-key rust-mode-map (kbd "TAB") #'company-indent-or-complete-common)
-(setq company-tooltip-align-annotations t)
-
-(with-eval-after-load 'rust-mode
-  (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
-
-;;
 ;; Company
 ;;
 
@@ -162,24 +136,3 @@
 ;; Company appears to override the above keymap based on company-auto-complete-chars.
 ;; Turning it off ensures we have full control.
 (setq company-auto-complete-chars nil)
-
-;;
-;; Ruby
-;;
-(with-eval-after-load 'company
-                 '(push 'company-robe company-backends))
-
-(autoload 'inf-ruby-minor-mode "inf-ruby" "Run an inferior Ruby process" t)
-
-(add-hook 'enh-ruby-mode-hook 'robe-mode)
-(add-hook 'enh-ruby-mode-hook 'yard-mode)
-(add-hook 'ehn-ruby-mode-hook 'inf-ruby-minor-mode)
-(add-hook 'ehn-ruby-mode-hook 'company-mode)
-
-(add-to-list 'auto-mode-alist '("\\.rb$" . enh-ruby-mode))
-
-(add-to-list 'auto-mode-alist
-             '("\\(?:\\.rb\\|ru\\|rake\\|thor\\|jbuilder\\|gemspec\\|podspec\\|/\\(?:Gem\\|Rake\\|Cap\\|Thor\\|Vagrant\\|Guard\\|Pod\\)file\\)\\'" . enh-ruby-mode))
-
-(chruby "2.5.3")
-
