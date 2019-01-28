@@ -30,8 +30,7 @@
 
     ;; project navigation
     projectile
-    rg
-    ripgrep
+    ag
 
     ;; syntax checking
     flycheck    
@@ -39,7 +38,6 @@
     ;; various modes
     yaml-mode
     markdown-mode
-
     ) "a list of packages to ensure are installed at launch.")
 
 (require 'cl)
