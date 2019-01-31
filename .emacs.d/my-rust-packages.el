@@ -1,6 +1,5 @@
 (defvar required-rust-packages
   '(
-    rust-mode
     flycheck-rust
     ))
 
@@ -11,6 +10,8 @@
 ;;
 
 (use-package rust-mode
+  :ensure t
+  
   :init
   (add-hook 'flycheck-mode-hook #'flycheck-rust-setup)
   

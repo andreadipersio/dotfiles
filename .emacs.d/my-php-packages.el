@@ -1,10 +1,7 @@
 (defvar required-php-packages
   '(
-    company-php
-    ac-php
     ede-php-autoload
     ede-php-autoload-composer-installers
-    php-mode
     ))
 
 (install-missing-packages required-php-packages)
@@ -14,12 +11,15 @@
 ;;
 
 (use-package ac-php
+  :ensure t
   :after company)
 
 (use-package company-php
+  :ensure t
   :after ac-php)
 
 (use-package php-mode
+  :ensure t
   :after company-php
   
   :mode "\\.php$"

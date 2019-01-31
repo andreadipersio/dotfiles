@@ -24,14 +24,9 @@
     use-package
 
     ;; Completion
-    ivy
-    counsel
-    swiper
     flx
-    company    
 
     ;; project navigation
-    projectile
     ag
 
     ;; syntax checking
@@ -85,6 +80,7 @@
   (global-set-key (kbd "C-h v") 'counsel-describe-variable))
 
 (use-package swiper
+  :ensure t
   :after ivy
   :bind (("C-s" . swiper)
 	 ("C-r" . swiper)))

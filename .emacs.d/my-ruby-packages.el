@@ -1,10 +1,7 @@
 (defvar required-ruby-packages
   '(
-    enh-ruby-mode
-    chruby
     yard-mode
     robe
-    inf-ruby
     ))
 
 (install-missing-packages required-ruby-packages)
@@ -12,19 +9,30 @@
 ;;
 ;; Ruby
 ;;
-(with-eval-after-load 'company
-                 '(push 'company-robe company-backends))
 
-(autoload 'inf-ruby-minor-mode "inf-ruby" "Run an inferior Ruby process" t)
+(use-package enh-ruby-mode
+  :ensure t
+  :mode "\\.rb\\'"
+  :mode "Rakefile\\'"
+  :mode "Gemfile\\'"
+  :mode "Berksfile\\'"
+  :mode "Vagrantfile\\'"
+  
+  :interpreter "ruby"
 
-(add-hook 'enh-ruby-mode-hook 'robe-mode)
-(add-hook 'enh-ruby-mode-hook 'yard-mode)
-(add-hook 'ehn-ruby-mode-hook 'inf-ruby-minor-mode)
-(add-hook 'ehn-ruby-mode-hook 'company-mode)
+  :init
+  (push 'company-robe company-backends)
+  (add-hook 'enh-ruby-mode-hook 'robe-mode)
+  (add-hook 'enh-ruby-mode-hook 'yard-mode)
+  (add-hook 'ehn-ruby-mode-hook 'inf-ruby-minor-mode)
+  (add-hook 'ehn-ruby-mode-hook 'company-mode))
 
-(add-to-list 'auto-mode-alist '("\\.rb$" . enh-ruby-mode))
+(use-package inf-ruby
+  :ensure t
+  :init
+  (add-hook 'ruby-mode-hook 'inf-ruby-minor-mode))
 
-(add-to-list 'auto-mode-alist
-             '("\\(?:\\.rb\\|ru\\|rake\\|thor\\|jbuilder\\|gemspec\\|podspec\\|/\\(?:Gem\\|Rake\\|Cap\\|Thor\\|Vagrant\\|Guard\\|Pod\\)file\\)\\'" . enh-ruby-mode))
-
-(chruby "2.5.3")
+(use-package chruby
+  :ensure t
+  :init
+  (chruby "2.5.3"))
