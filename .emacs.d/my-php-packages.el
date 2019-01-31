@@ -12,24 +12,31 @@
 ;;
 ;; PHP
 ;;
-(require 'cl)
-(require 'php-mode)
-(add-hook 'php-mode-hook
-          '(lambda ()
-             (auto-complete-mode t)
-             (require 'ac-php)
-             (setq ac-sources  '(ac-source-php ) )
-             (yas-global-mode 1)
-             (ac-php-core-eldoc-setup ) ;; enable eldoc
 
-             (define-key php-mode-map  (kbd "C-]") 'ac-php-find-symbol-at-point)   ;goto define
-             (define-key php-mode-map  (kbd "C-t") 'ac-php-location-stack-back)    ;go back
-             ))
+(use-package ac-php
+  :after company)
 
-(add-hook 'php-mode-hook
-          '(lambda ()
-             (require 'company-php)
-             (company-mode t)
-             (ac-php-core-eldoc-setup) ;; enable eldoc
-             (make-local-variable 'company-backends)
-             (add-to-list 'company-backends 'company-ac-php-backend)))
+(use-package company-php
+  :after ac-php)
+
+(use-package php-mode
+  :after company-php
+  
+  :mode "\\.php$"
+  
+  :requires (ac-php company-php)
+  :after company  
+  
+  :config
+  (add-hook 'php-mode-hook 'auto-complete-mode)
+  (add-hook 'php-mode-hook 'company-mode)
+  (add-hook 'php-mode-hook 'subword-mode)
+  
+  (ac-php-core-eldoc-setup)  
+  (make-local-variable 'company-backends)
+  (add-to-list 'company-backends 'company-ac-php-backend)
+  
+  :bind
+  (("<C-tab>" . counsel-company)
+   ("C-]" . ac-php-find-symbol-at-point)
+   ("C-t" . ac-php-location-stack-back)))

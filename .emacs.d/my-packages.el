@@ -1,4 +1,4 @@
- (require 'package)
+(require 'package)
 
 ;;
 ;; Package Archives
@@ -20,6 +20,8 @@
     let-alist
     magit
     cider
+
+    use-package
 
     ;; Completion
     ivy
@@ -67,70 +69,63 @@
 (require 'magit)
 (require 'cider)
 (require 'company)
+(require 'cl)
 
 ;;
 ;; ivy
 ;;
 
-(ivy-mode 1)
+(use-package counsel
+  :ensure t
+  :config
+  (global-set-key (kbd "M-x") 'counsel-M-x)
+  (global-set-key (kbd "C-x C-f") 'counsel-find-file)
+  (global-set-key (kbd "C-x b") 'counsel-ibuffer)  
+  (global-set-key (kbd "C-h f") 'counsel-describe-function)
+  (global-set-key (kbd "C-h v") 'counsel-describe-variable))
 
-(setq ivy-use-virtual-buffers t)
-(setq enable-recursive-minibuffers t)
-(setq ivy-count-format "(%d/%d) ")
-(setq ivy-initial-input-alist nil)
+(use-package swiper
+  :after ivy
+  :bind (("C-s" . swiper)
+	 ("C-r" . swiper)))
 
-;; Enable fuzzy matching
-(setq ivy-re-builders-alist
-      '((t . ivy--regex-fuzzy)))
+(use-package ivy
+  :ensure t
+  :config
+  (with-eval-after-load 'ido
+    (ido-mode -1)
+    (ivy-mode 1))
 
-(global-set-key (kbd "M-x") 'counsel-M-x)
-(global-set-key (kbd "C-x C-f") 'counsel-find-file)
-(global-set-key "\C-s" 'swiper)
+  (setq ivy-use-virtual-buffers t)
+  (setq enable-recursive-minibuffers t)
+  (setq ivy-count-format "(%d/%d) ")
+  (setq ivy-initial-input-alist nil)
+  (setq ivy-display-style 'fancy)
+
+  ;; Enable fuzzy matching
+  (setq ivy-re-builders-alist
+	'((t . ivy--regex-fuzzy))))
 
 ;;
 ;; Projectile
 ;;
 
-(projectile-mode 1)
-(define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
-(setq projectile-completion-system 'ivy)
+(use-package projectile
+  :ensure t
+  
+  :init
+  (projectile-mode)
+  (setq projectile-completion-system 'ivy)
+  
+  :bind (("C-c p" . projectile-command-map)))
+
+(use-package company
+  :ensure t)
 
 ;;
-;; Company
+;; Temporary highlight changes from yankink, etc
 ;;
-
-;;; Prevent suggestions from being triggered automatically. In particular,
-;;; this makes it so that:
-;;; - TAB will always complete the current selection.
-;;; - RET will only complete the current selection if the user has explicitly
-;;;   interacted with Company.
-;;; - SPC will never complete the current selection.
-;;;
-;;; Based on:
-;;; - https://github.com/company-mode/company-mode/issues/530#issuecomment-226566961
-;;; - https://emacs.stackexchange.com/a/13290/12534
-;;; - http://stackoverflow.com/a/22863701/3538165
-;;;
-;;; See also:
-;;; - https://emacs.stackexchange.com/a/24800/12534
-;;; - https://emacs.stackexchange.com/q/27459/12534
-
-;; <return> is for windowed Emacs; RET is for terminal Emacs
-(dolist (key '("<return>" "RET"))
-  ;; Here we are using an advanced feature of define-key that lets
-  ;; us pass an "extended menu item" instead of an interactive
-  ;; function. Doing this allows RET to regain its usual
-  ;; functionality when the user has not explicitly interacted with
-  ;; Company.
-  (define-key company-active-map (kbd key) 
-   `(menu-item nil company-complete
-                :filter ,(lambda (cmd)
-                           (when (company-explicit-action-p)
-                             cmd)))))
-
-(define-key company-active-map (kbd "TAB") #'company-complete-selection)
-(define-key company-active-map (kbd "SPC") nil)
-
-;; Company appears to override the above keymap based on company-auto-complete-chars.
-;; Turning it off ensures we have full control.
-(setq company-auto-complete-chars nil)
+(use-package volatile-highlights
+  :ensure t
+  :config
+  (volatile-highlights-mode +1))
