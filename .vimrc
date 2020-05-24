@@ -49,6 +49,7 @@ endif
 " see also http://snk.tuxfamily.org/log/vim-256color-bce.html
 if &term =~ '256color'
   set t_ut=
+  colorscheme wombat256mod
 endif
 
 "

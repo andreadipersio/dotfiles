@@ -2,6 +2,7 @@
 
 DOTFILES ?= ${HOME}/.dotfiles
 VIMUSR ?= ${HOME}/.vim
+VIMPKG ?= ${HOME}/.vim/pack/adp
 BINUSR ?= ${HOME}/bin
 
 ${HOME}/.vimrc:
@@ -16,8 +17,17 @@ ${VIMUSR}/bundle:
 ${VIMUSR}/undo:
 	mkdir -p ${VIMUSR}/undo
 
-${VIMUSR}/bundle/Vundle.vim: ${VIMUSR}/bundle
-	git clone https://github.com/VundleVim/Vundle.vim.git ${VIMUSR}/bundle/Vundle.vim
+${VIMPKG}:
+	mkdir -p $@
+
+${VIMPKG}/start/ctrlp.vim: ${VIMPKG}
+	git clone https://github.com/ctrlpvim/ctrlp.vim.git $@
+
+${VIMPKG}/start/vim-sensible.vim: ${VIMPKG}
+	git clone https://github.com/tpope/vim-sensible.git $@
+
+${VIMPKG}/start/wombat256.vim: ${VIMPKG}
+	git clone https://github.com/vim-scripts/wombat256.vim.git $@
 
 ${HOME}/.bashrc:
 	ln -sF ${DOTFILES}/.bashrc ${HOME}/
@@ -37,5 +47,4 @@ ${BINUSR}/git-prompt.sh:
 
 install-base: ${HOME}/.bashrc ${HOME}/.bash_profile ${HOME}/.bash_local ${HOME}/.locale ${BINUSR}/git-prompt.sh
 
-install-vim: ${HOME}/.vimrc ${VIMUSR} ${VIMUSR}/bundle ${VIMUSR}/undo ${VIMUSR}/bundle/Vundle.vim
-	vim +PluginInstall +qall
+install-vim: ${HOME}/.vimrc ${VIMUSR} ${VIMUSR}/undo ${VIMPKG}/start/ctrlp.vim ${VIMPKG}/start/vim-sensible.vim ${VIMPKG}/start/wombat256.vim
