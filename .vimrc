@@ -1,48 +1,9 @@
-set nocompatible 
-filetype off
+set nocompatible
 
-"
-" Vundle
-"
-
-" set the runtime path to include Vundle and initialize
-set rtp+=~/.vim/bundle/Vundle.vim
-
-call vundle#begin()
-
-Plugin 'VundleVim/Vundle.vim'
-
-Plugin 'git://github.com/tpope/vim-sensible.git'
-Plugin 'git://github.com/mileszs/ack.vim.git'
-Plugin 'git://github.com/ctrlpvim/ctrlp.vim.git'
-Plugin 'git://github.com/vim-scripts/wombat256.vim'
-Plugin 'git://github.com/fatih/vim-go.git'
-Plugin 'elixir-editors/vim-elixir'
-Plugin 'mhinz/vim-mix-format'
-Plugin 'thinca/vim-ref'
-Plugin 'slashmili/alchemist.vim'
-
-call vundle#end()
-filetype plugin indent on 
-
-colorscheme wombat256mod
-
+packloadall
 runtime! plugin/sensible.vim
 
-"
-" Go 
-"
-
-let g:go_highlight_functions = 1
-let g:go_highlight_methods = 1
-let g:go_highlight_structs = 1
-let g:go_highlight_operators = 1
-let g:go_highlight_build_constraints = 1
-let g:go_fmt_autosave = 1
-let g:go_fmt_command = 'goimports'
-let g:go_metalinter_enabled = ['gotype']
-let g:go_metalinter_command = "--enable=gotype --enable=vet --vendor"
-
+filetype plugin indent on
 
 "
 " Hide as much as possible
@@ -61,8 +22,6 @@ set tabstop=4       " The width of a TAB is set to 4.
 set shiftwidth=4    " Indents will have a width of 4
 set softtabstop=4   " Sets the number of columns for a TAB
 set expandtab       " Expand TABs to spaces
-
-set runtimepath^=~/.vim/bundle/ctrlp.vim
 
 "
 " Keep track of changes to a file across sessions
@@ -91,3 +50,33 @@ endif
 if &term =~ '256color'
   set t_ut=
 endif
+
+"
+" Go
+"
+
+let g:go_highlight_functions = 1
+let g:go_highlight_methods = 1
+let g:go_highlight_structs = 1
+let g:go_highlight_operators = 1
+let g:go_highlight_build_constraints = 1
+let g:go_fmt_autosave = 1
+let g:go_fmt_command = 'goimports'
+let g:go_metalinter_enabled = ['gotype']
+let g:go_metalinter_command = "--enable=gotype --enable=vet --vendor"
+
+"
+"
+"
+function StripTrailingWhitespace()
+  if !&binary && &filetype != 'diff'
+    normal mz
+    normal Hmy
+    %s/\s\+$//e
+    normal 'yz<CR>
+    normal `z
+  endif
+endfunction
+
+nnoremap <S-F12> m`:call StripTrailingWhitespace()<CR>``
+vnoremap <S-F12> :call StripTrailingWhitespace()<CR>
