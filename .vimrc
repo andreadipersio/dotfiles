@@ -79,5 +79,23 @@ function StripTrailingWhitespace()
   endif
 endfunction
 
-nnoremap <S-F12> m`:call StripTrailingWhitespace()<CR>``
-vnoremap <S-F12> :call StripTrailingWhitespace()<CR>
+nnoremap <F12> m`:call StripTrailingWhitespace()<CR>``
+vnoremap <F12> :call StripTrailingWhitespace()<CR>
+
+"
+" Yaml and Toml indentation
+"
+autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab
+autocmd FileType toml setlocal ts=2 sts=2 sw=2 expandtab
+
+"
+" netrw (file browser)
+"
+let g:netrw_banner = 0
+let g:netrw_liststyle = 3
+let g:netrw_browse_split = 4
+let g:netrw_altv = 1
+let g:netrw_winsize = 25
+
+
+nnoremap <F8> :Lexplore<CR>
